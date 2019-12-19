@@ -351,6 +351,36 @@ function delete_button_click(listIndex) {
     listIndex: listIndex
   });
 };
+//--------------------------------------------------
+function addElement(){
+  socket.emit("addElement_Button_Presed")
+};
+function addElement_From_Socket(){
+  var index = 0;
+  var startTitleHolder    = "Test";
+  var startTimeTextHolder = "12:00";
+  var cueLengthTextHolder = "00:04:00";
+  var addInputElements    = "";
+//----------
+  addInputElements += "<input type=text value='"+startTitleHolder+"'"+"name='title"+index+"' id='title"+index+"' >"
+  addInputElements += "<input type=time value='"+startTimeTextHolder+"'"+"name='startTime"+index+"' id='startTime"+index+"' >"
+  addInputElements += "<input type=time value='"+cueLengthTextHolder+"'"+"name='cueLength"+index+"' id='cueLength"+index+"' >"
+  addInputElements += "<button class='delete' type='reset', name='deleteButton"+index+"' id="+index+", onClick='delete_button_click(this.id)'>x"
+
+//----------
+  console.log(addInputElements);
+
+
+//----------
+  $('#newElements').append(addInputElements);
+//----------
+};
+//--------------------------------------------------
+socket.on("sendElement_To_Admin", function(data){
+  console.log("sendElement_To_Admin: -----------------------");
+  console.log(data.startTitleHolder);
+
+});
 
 socket.on("send_Delete_Button_from_Socket", function(data) {
   console.log(data);

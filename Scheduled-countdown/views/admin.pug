@@ -9,6 +9,7 @@ block content
       h2#offsetTime= offsetTime
       p Adjust Time
         .buttondiv
+          button(onClick="addElement()") addElement
           button#offsetMinus.commandButton -
           button#offsetPlus.commandButton +
           button#offsetReset.commandButton Reset
@@ -31,6 +32,8 @@ block content
 
 
     div.floatl()
+      div(id=index)
+        div(id="newElements")
       form(method='POST' action='/admin/submit')
         each person, index in scheduledTimes
           div(id=index)

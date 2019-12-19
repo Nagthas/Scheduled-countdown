@@ -76,6 +76,7 @@ var serverNowInMs = "";
 
 // New text
 var centerTextContent = "";
+var newScheduledTimesArray = [];
 
 
 
@@ -104,6 +105,7 @@ function getscheduledTimes(){
         console.log('Error reading file:',err)
         return
     }
+    newScheduledTimesArray = customer;
     scheduledTimesArray = customer;
     scheduledTimesArraylength = customer.profiles.length;
 
@@ -143,6 +145,7 @@ function updateScheduledTimesjson(){
       console.log('Error reading file:', err)
       return
     }
+
 
     if (customer.profiles.length > startTitleArray.length) {
       console.log("-------------------------------------------------------------");
@@ -524,6 +527,13 @@ var users = [];
       console.log("send_addNewRow_To_Socket:");
       addNewRowDefault();
     })
+
+    socket.on("addElement_Button_Presed",function(data){
+        io.emit("sendElement_To_Admin",{
+          startTitleHolder:startTitleHolder
+
+        });
+    });
 
  });
 
