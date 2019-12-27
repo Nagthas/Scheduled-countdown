@@ -60,13 +60,33 @@ var startTitleHolder = "";
 var startTimeTextHolder = "";
 var cueLengthTextHolder = "";
 
-var serverNewDate = "";
-var serverNowInMs = "";
+var serverNewDate     = "";
+var serverNowInMs     = "";
 
 // New text
 var centerTextContent = "";
-var myIpArray = "";
+var myIpArray         = "";
+var myOS              = process.platform;
+var macPath           = "~/scheduledTimes";
+var pcPath            = "";
 
+console.log("socket platform: "+process.platform);
+const path = require('path')
+const homedir = require('os').homedir()+"/Scheduled-countdown";
+
+const scheduledTimesPath_InApp        = './public/scheduledTimes.json';
+const scheduledTimesPath_Local        = homedir+"/scheduledTimes.json";
+const scheduledTimesBackupPath_InApp  = './public/scheduledTimes-backup.json';
+const scheduledTimesBackupPath_Local  = homedir+"/scheduledTimes-backup.json";
+const variables_InApp                 = './public/variables.json'
+const variables_Local                 = homedir+"/variables.json"
+const myip_InApp                      = './public/myip.json'
+const myip_Local                      = homedir+"/myip.json"
+
+
+if (!fs.existsSync(homedir)){
+    fs.mkdirSync(homedir);
+}
 
 //--------------------------------------------------
 //--get all ip addresses
@@ -129,6 +149,73 @@ if (error) {
 }, false);
 //--------------------------------------------------
 
+// new First Part From APP -> Local storage
+// Need to fix this this dont repeat
+//--------------------------------------------------
+//-----getJsonLocalAndSendToRoot
+//--------------------------------------------------
+function getJsonLocalAndSendToRoot(){
+  const fs = require('fs')
+  function jsonReader(filePath, cb) {
+      fs.readFile(filePath, (err, fileData) => {
+          if (err) {
+              return cb && cb(err)
+          }
+          try {
+              const object = JSON.parse(fileData)
+              return cb && cb(null, object)
+          } catch(err) {
+              return cb && cb(err)
+          }
+      })
+  }
+//-- scheduledTimes
+  jsonReader(scheduledTimesPath_InApp, (err, customer) => {
+    if (err) {
+        console.log('Error reading file:',err)
+        return
+    }
+  fs.writeFile(scheduledTimesPath_Local, JSON.stringify(customer, null,4), (err) => {
+        if (err) console.log('Error writing file:', err)
+    })
+  })
+//----------------
+//-- variables
+  jsonReader(variables_InApp, (err, customer) => {
+    if (err) {
+        console.log('Error reading file:',err)
+        return
+    }
+  fs.writeFile(variables_Local, JSON.stringify(customer, null,4), (err) => {
+        if (err) console.log('Error writing file:', err)
+    })
+  })
+//-- scheduledTimes-backup.json
+  jsonReader(scheduledTimesBackupPath_InApp, (err, customer) => {
+    if (err) {
+        console.log('Error reading file:',err)
+        return
+    }
+  fs.writeFile(scheduledTimesBackupPath_Local, JSON.stringify(customer, null,4), (err) => {
+        if (err) console.log('Error writing file:', err)
+    })
+  })
+//-- myip.json
+  jsonReader(myip_InApp, (err, customer) => {
+    if (err) {
+        console.log('Error reading file:',err)
+        return
+    }
+  fs.writeFile(myip_Local, JSON.stringify(customer, null,4), (err) => {
+        if (err) console.log('Error writing file:', err)
+    })
+  })
+
+
+};
+getJsonLocalAndSendToRoot();
+//--------------------------------------------------
+
 //--------------------------------------------------
 //-----getscheduledTimes
 //--------------------------------------------------
@@ -148,7 +235,7 @@ function getscheduledTimes(){
       })
   }
 
-  jsonReader('./public/scheduledTimes.json', (err, customer) => {
+  jsonReader(scheduledTimesPath_Local, (err, customer) => {
     if (err) {
         console.log('Error reading file:',err)
         return
@@ -160,13 +247,14 @@ function getscheduledTimes(){
     for(let i=0; i < customer.profiles.length; i++) {startTimeArray[i] = customer.profiles[i].startTime}
     for(let i=0; i < customer.profiles.length; i++) {cueLengthArray[i] = customer.profiles[i].cueLength};
 
-  // fs.writeFile('./public/scheduledTimes.json', JSON.stringify(customer, null,4), (err) => {
+  // fs.writeFile(scheduledTimesPath_InApp, JSON.stringify(customer, null,4), (err) => {
   //       if (err) console.log('Error writing file:', err)
   //   })
   })
 };
 getscheduledTimes();
 //--------------------------------------------------
+
 //--------------------------------------------------
 //-----updateScheduledTimesjson
 //--------------------------------------------------
@@ -187,7 +275,7 @@ function updateScheduledTimesjson(){
       })
   }
 
-  jsonReader('./public/scheduledTimes.json', (err, customer) => {
+  jsonReader(scheduledTimesPath_Local, (err, customer) => {
     if (err) {
       console.log('Error reading file:', err)
       return
@@ -227,7 +315,7 @@ function updateScheduledTimesjson(){
       return a.startTime.localeCompare(b.startTime);
     });
 
-    fs.writeFile('./public/scheduledTimes.json', JSON.stringify(customer, null, 4), (err) => {
+    fs.writeFile(scheduledTimesPath_Local, JSON.stringify(customer, null, 4), (err) => {
       if (err) console.log('Error writing file:', err)
     })
   })
@@ -251,7 +339,7 @@ function updateOffsetTimePlusjson(){
           }
       })
   }
-  jsonReader('./public/variables.json', (err, variables) => {
+  jsonReader(variables_Local, (err, variables) => {
     if (err) {
         console.log('Error reading file:',err)
         return
@@ -261,7 +349,7 @@ function updateOffsetTimePlusjson(){
     // console.log("updateOffsetTimejson: ");
     // console.log(variables);
 
-  fs.writeFile('./public/variables.json', JSON.stringify(variables, null,4), (err) => {
+  fs.writeFile(variables_Local, JSON.stringify(variables, null,4), (err) => {
         if (err) console.log('Error writing file:', err)
     })
   })
@@ -287,7 +375,7 @@ function updateOffsetTimeMinusjson(){
           }
       })
   }
-  jsonReader('./public/variables.json', (err, variables) => {
+  jsonReader(variables_Local, (err, variables) => {
     if (err) {
         console.log('Error reading file:',err)
         return
@@ -297,7 +385,7 @@ function updateOffsetTimeMinusjson(){
     // console.log("updateOffsetTimejson: ");
     // console.log(variables);
 
-  fs.writeFile('./public/variables.json', JSON.stringify(variables, null,4), (err) => {
+  fs.writeFile(variables_Local, JSON.stringify(variables, null,4), (err) => {
         if (err) console.log('Error writing file:', err)
     })
   })
@@ -322,7 +410,7 @@ function updateOffsetTimeResetjson(){
           }
       })
   }
-  jsonReader('./public/variables.json', (err, variables) => {
+  jsonReader(variables_Local, (err, variables) => {
     if (err) {
         console.log('Error reading file:',err)
         return
@@ -332,7 +420,7 @@ function updateOffsetTimeResetjson(){
     // console.log("updateOffsetTimejson: ");
     // console.log(variables);
 
-  fs.writeFile('./public/variables.json', JSON.stringify(variables, null,4), (err) => {
+  fs.writeFile(variables_Local, JSON.stringify(variables, null,4), (err) => {
         if (err) console.log('Error writing file:', err)
     })
   })
@@ -343,7 +431,7 @@ function updateOffsetTimeResetjson(){
 function loadDefaultjson(){
   getscheduledTimes();
   const fs = require('fs')
-  fs.writeFile('./public/scheduledTimes.json', JSON.stringify(scheduledTimesBackup, null, 4), (err) => {
+  fs.writeFile(scheduledTimesPath_InApp, JSON.stringify(scheduledTimesBackup, null, 4), (err) => {
       if (err) throw err;
   });
 };
@@ -366,14 +454,14 @@ function writeDefaultjson(){
       })
   }
 
-  jsonReader('./public/scheduledTimes.json', (err, customer) => {
+  jsonReader(scheduledTimesPath_InApp, (err, customer) => {
     if (err) {
         console.log('Error reading file:',err)
         return
     }
 
     //console.log("startTitleArray: "+ startTitleArray);
-  fs.writeFile('./public/scheduledTimes-backup.json', JSON.stringify(customer, null,4), (err) => {
+  fs.writeFile(scheduledTimesBackupPath_Local, JSON.stringify(customer, null,4), (err) => {
         if (err) console.log('Error writing file:', err)
     })
   })
@@ -400,7 +488,7 @@ function getOffsetTimejson(){
           }
       })
   }
-  jsonReader('./public/variables.json', (err, variables) => {
+  jsonReader(variables_InApp, (err, variables) => {
     if (err) {
         console.log('Error reading file:',err)
         return
@@ -409,7 +497,7 @@ function getOffsetTimejson(){
     offsetTimejson = variables.offsetTime;
     //console.log("offsetTimejson: "+offsetTimejson);
 
-  // fs.writeFile('./public/variables.json', JSON.stringify(variables, null,4), (err) => {
+  // fs.writeFile(variables_InApp, JSON.stringify(variables, null,4), (err) => {
   //       if (err) console.log('Error writing file:', err)
   //   })
   })
@@ -426,7 +514,7 @@ function addNewRowDefault(){
   console.log("addNewRowDefault knappen funkar");
   var addString = "";
 
-  fs.readFile("./public/scheduledTimes.json", function (err, data) {
+  fs.readFile(scheduledTimesPath_Local, function (err, data) {
     var json = JSON.parse(data);
     var feed = {title: "New row added", startTime: "12:00", cueLength: "00:01:10"};
 
@@ -441,7 +529,7 @@ function addNewRowDefault(){
     });
 
     sleep(1000).then(() => {
-      fs.writeFile('./public/scheduledTimes.json', addString , (err) => {
+      fs.writeFile(scheduledTimesPath_InApp, addString , (err) => {
           if (err) throw err;
       });
     });
@@ -598,7 +686,7 @@ var users = [];
             })
         }
 
-        jsonReader('./public/myip.json', (err, customer) => {
+        jsonReader(myip_Local, (err, customer) => {
           if (err) {
             console.log('Error reading file:', err)
             return
@@ -608,7 +696,7 @@ var users = [];
           customer.myIp = data.myChosenIp;
 
 
-          fs.writeFile('./public/myip.json', JSON.stringify(customer, null, 4), (err) => {
+          fs.writeFile(myip_Local, JSON.stringify(customer, null, 4), (err) => {
             if (err) console.log('Error writing file:', err)
           })
         })
