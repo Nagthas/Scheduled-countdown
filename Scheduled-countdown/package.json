@@ -2,9 +2,14 @@
   "name": "wallmansclock-v2",
   "version": "0.0.0",
   "private": true,
+  "bin":"./bin/www",
   "scripts": {
     "start": "npx nodemon ./bin/www",
     "build": "nexe ./bin/www -r public/**/* -r lib/**/* -r bin/**/* -r routes/**/* -r views/**/* -r app.js -r node_modules/**/*"
+  },
+  "pkg": {
+    "scripts": "build/**/*.js",
+    "assets": ["bin/**/*", "lib/**/*", "public/**/*", "routes/**/*", "views/**/*"]
   },
   "dependencies": {
     "cookie-parser": "~1.4.4",

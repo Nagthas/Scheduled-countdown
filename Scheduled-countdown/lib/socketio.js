@@ -74,15 +74,20 @@ console.log("socket platform: "+process.platform);
 const path = require('path')
 const homedir = require('os').homedir()+"/Scheduled-countdown";
 
-const scheduledTimesPath_InApp        = './public/scheduledTimes.json';
+const scheduledTimesPath_InApp        = path.join(__dirname, '../public/scheduledTimes.json');
 const scheduledTimesPath_Local        = homedir+"/scheduledTimes.json";
-const scheduledTimesBackupPath_InApp  = './public/scheduledTimes-backup.json';
+//const scheduledTimesBackupPath_InApp  = './public/scheduledTimes-backup.json';
+const scheduledTimesBackupPath_InApp  = path.join(__dirname, '../public/scheduledTimes-backup.json');
 const scheduledTimesBackupPath_Local  = homedir+"/scheduledTimes-backup.json";
-const variables_InApp                 = './public/variables.json'
-const variables_Local                 = homedir+"/variables.json"
-const myip_InApp                      = './public/myip.json'
-const myip_Local                      = homedir+"/myip.json"
+//const variables_InApp                 = './public/variables.json';
+const variables_InApp                 = path.join(__dirname, '../public/variables.json');
+const variables_Local                 = homedir+"/variables.json";
+//const myip_InApp                      = './public/myip.json';
+const myip_InApp                      = path.join(__dirname, '../public/myip.json');
+const myip_Local                      = homedir+"/myip.json";
 
+console.log(__dirname);
+console.log(path.join(__dirname, '../scheduledTimes.json'));
 
 if (!fs.existsSync(homedir)){
     fs.mkdirSync(homedir);
@@ -170,6 +175,7 @@ function getJsonLocalAndSendToRoot(){
       })
   }
 //-- scheduledTimes
+if (!fs.existsSync(scheduledTimesPath_Local)){
   jsonReader(scheduledTimesPath_InApp, (err, customer) => {
     if (err) {
         console.log('Error reading file:',err)
@@ -179,8 +185,9 @@ function getJsonLocalAndSendToRoot(){
         if (err) console.log('Error writing file:', err)
     })
   })
-//----------------
+}
 //-- variables
+if (!fs.existsSync(variables_Local)){
   jsonReader(variables_InApp, (err, customer) => {
     if (err) {
         console.log('Error reading file:',err)
@@ -190,7 +197,9 @@ function getJsonLocalAndSendToRoot(){
         if (err) console.log('Error writing file:', err)
     })
   })
+}
 //-- scheduledTimes-backup.json
+if (!fs.existsSync(scheduledTimesBackupPath_Local)){
   jsonReader(scheduledTimesBackupPath_InApp, (err, customer) => {
     if (err) {
         console.log('Error reading file:',err)
@@ -200,7 +209,9 @@ function getJsonLocalAndSendToRoot(){
         if (err) console.log('Error writing file:', err)
     })
   })
+}
 //-- myip.json
+if (!fs.existsSync(myip_Local)){
   jsonReader(myip_InApp, (err, customer) => {
     if (err) {
         console.log('Error reading file:',err)
@@ -210,6 +221,8 @@ function getJsonLocalAndSendToRoot(){
         if (err) console.log('Error writing file:', err)
     })
   })
+}
+
 
 
 };
@@ -240,6 +253,8 @@ function getscheduledTimes(){
         console.log('Error reading file:',err)
         return
     }
+    console.log("scheduledTimesPath_Local: CUSTOMER");
+    console.log(customer);
     scheduledTimesArray = customer;
     scheduledTimesArraylength = customer.profiles.length;
 
@@ -565,7 +580,13 @@ var users = [];
     socket.on("sendDB_To_Socket", function (data) {
       //console.log("sendDB_To_Socket:"+ JSON.stringify(data) )
       io.emit("sendDB_TO_Main", {socketDBArray:data});
-      io.emit("sendDB_TO_Admin", {socketDBArray:data});
+      io.emit("sendDB_TO_Admin", {
+        socketDBArray:data,
+        scheduledTimesPath_Local:scheduledTimesPath_Local,
+        scheduledTimesBackupPath_Local:scheduledTimesBackupPath_Local,
+        variables_Local:variables_Local,
+        myip_Local:myip_Local,
+      });
     });
     //--------------------------------------------------
     socket.on("writeToScheduledTimesjson", function (data){
