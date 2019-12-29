@@ -479,7 +479,6 @@ var users = [];
       io.emit("sendDB_TO_Main", {socketDBArray:data});
       io.emit("sendDB_TO_Admin", {socketDBArray:data});
     });
-    //--------------------------------------------------
     socket.on("writeToScheduledTimesjson", function (data){
         console.log("writeToScheduledTimesjson");
       startTitleArray = data.startTitleArray;
@@ -488,7 +487,6 @@ var users = [];
       updateScheduledTimesjson();
 
     });
-    //--------------------------------------------------
     socket.on("updateScheduledTimesArray", function(data){
       console.log("updateScheduledTimesArray: " + data.startTimeArray);
       io.emit("updateDB_From_Socket",{
@@ -497,7 +495,6 @@ var users = [];
         cueLengthArray: cueLengthArray
       });
     });
-    //--------------------------------------------------
     socket.on("updateOffsetTimePlus", function(data){
       console.log("updateOffsetTime: " + data.offsetTime);
       offsetTimeInit = data.offsetTime;
@@ -505,7 +502,6 @@ var users = [];
       updateOffsetTimePlusjson();
       io.emit("updateOffsetTime_From_Socket",{offsetTime: offsetTimeInit});
     });
-    //--------------------------------------------------
     socket.on("updateOffsetTimeMinus", function(data){
       console.log("updateOffsetTimeMinus: " + data.offsetTime);
       offsetTimeInit = data.offsetTime;
@@ -513,7 +509,6 @@ var users = [];
       updateOffsetTimeMinusjson();
       io.emit("updateOffsetTime_From_Socket",{offsetTime: offsetTimeInit});
     });
-    //--------------------------------------------------
     socket.on("updateOffsetTimeReset", function(data){
       console.log("updateOffsetTimeReset: " + data.offsetTime);
       offsetTimeInit = data.offsetTime;
@@ -521,7 +516,6 @@ var users = [];
       updateOffsetTimeResetjson();
       io.emit("updateOffsetTime_From_Socket",{offsetTime: offsetTimeInit});
     });
-    //--------------------------------------------------
     socket.on("loadDefaultToSocket", function(data){
       console.log("loadDefaultToSocket: " + data.message);
       loadDefaultjson();
@@ -532,7 +526,6 @@ var users = [];
         });
 
     });
-    //--------------------------------------------------
     socket.on("writeDefaultToSocket", function(data){
       console.log("writeDefaultToSocket: " + data.startTimeArray);
 
@@ -542,7 +535,6 @@ var users = [];
 
       writeDefaultjson();
     });
-    //--------------------------------------------------
     socket.on("fiveMinPageLoad_To_Socket", function (data){
         console.log("fiveMinPageLoad_To_Socket: "+data);
         console.log(data.countDownTime);
@@ -553,15 +545,12 @@ var users = [];
     socket.on("fiveMinPageStart", function (data){
 
     });
-
     socket.on("updatebutton_To_Socket", function(data){
       io.emit("updatebutton_From_Socket",{})
     })
-
     socket.on("sortingButton_To_Socket",function(data){
       io.emit("sortingButton_From_Socket",{})
     })
-
     socket.on("send_Delete_Button_To_Socket",function(data){
       listIndex = data.listIndex
       console.log("send_Delete_Button_To_Socket: listIndex= "+listIndex);
@@ -569,7 +558,6 @@ var users = [];
         listIndex: listIndex
       })
     })
-
     socket.on("send_addNewRow_To_Socket",function(data){
       console.log("send_addNewRow_To_Socket:");
       addNewRowDefault();
