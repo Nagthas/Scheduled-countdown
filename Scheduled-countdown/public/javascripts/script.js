@@ -1,7 +1,8 @@
 "use strict";
-
+//--------------------------------------------------
+// - Variables & Booleans
+//--------------------------------------------------
 var myLocalip = document.getElementById("myLocalip").textContent;
-//var myLocalipAndPort = myLocalip + ":3000"
 var myLocalipAndPort = myLocalip
 console.log(myLocalipAndPort);
 //--------------------------------------------------
@@ -10,29 +11,12 @@ var nowTopRow = document.getElementById("nowTopRow");
 var titleText = document.getElementById("title");
 var startText = document.getElementById("start");
 //--------------------------------------------------
-var fiveMinuteText = document.getElementById("5minute");
-var cueTimeText = document.getElementById("cueTime");
-var offsetTime = document.getElementById("offsetTime");
 var offsetTimeInit = 0;
-//--------------------------------------------------
-// - Variables & Booleans
-//--------------------------------------------------
-var countDown = 7; // how many minutes before
-countDown = countDown * 60000; // convert to Ms
-var countUp = 5; // how many minutes after
-countUp = countUp * 60000; // convert to M
-
-var startTimeArray = [""];
-var startTitleArray = [""];
-var cueLengthArray = [""];
-var nowInMs = 0;
 var sendMin_To_countDownBoole = 0;
-var setTimeoutTime = 150;
 const sleep = (waitTimeInMs) => new Promise(resolve => setTimeout(resolve, waitTimeInMs));
-var newArrayIndex = 0;
-var startTitleHolder = "";
-var startTimeTextHolder = "";
-var cueLengthTextHolder = "";
+var socket = io.connect(myLocalipAndPort);
+var playButton = document.querySelector('#play');
+var countDownTimeInMS = "";
 //--------------------------------------------------
 function hideNowClock() {
   document.getElementById("centerNowText").style.display = "none";
@@ -44,14 +28,11 @@ function ShowNowClock() {
 }
 //--------------------------------------------------
 //--------------------------------------------------
-var socket = io.connect(myLocalipAndPort);
-//--------------------------------------------------
-var playButton = document.querySelector('#play');
-playButton.hidden = false;
+
+playButton.hidden = false
 function startPlayback() {
   return document.querySelector('.countDownSound').play();
 }
-//console.log('Attempting to play automatically...');
 startPlayback().then(function() {
   //console.log('The play() Promise fulfilled! Rock on!');
 }).catch(function(error) {
@@ -62,14 +43,10 @@ startPlayback().then(function() {
   // playback is triggered via a click event.
   playButton.addEventListener('click', startPlayback);
 });
-// BUTTON PUSH
 $("#play").on('click', function () {
   playButton.hidden = true;
 });
-//--------------------------------------------------
-// ALl info from Socket server
 
-var countDownTimeInMS = "";
 
 socket.on("centerTextContent", function(data){
   nowText.textContent   = data.newCurrentTime,

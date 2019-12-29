@@ -128,9 +128,6 @@ if (error) {
 }
 }, false);
 //--------------------------------------------------
-
-//--------------------------------------------------
-//-----getscheduledTimes
 //--------------------------------------------------
 function getscheduledTimes(){
   const fs = require('fs')
@@ -166,10 +163,6 @@ function getscheduledTimes(){
   })
 };
 getscheduledTimes();
-//--------------------------------------------------
-//--------------------------------------------------
-//-----updateScheduledTimesjson
-//--------------------------------------------------
 function updateScheduledTimesjson(){
   console.log("startTitleArray: "+startTitleArray);
   const fs = require('fs')
@@ -232,10 +225,6 @@ function updateScheduledTimesjson(){
     })
   })
 };
-//--------------------------------------------------
-//--------------------------------------------------
-//-----offsetPlus button press
-//--------------------------------------------------
 function updateOffsetTimePlusjson(){
   const fs = require('fs')
   function jsonReader(filePath, cb) {
@@ -268,10 +257,6 @@ function updateOffsetTimePlusjson(){
 
 
 };
-//--------------------------------------------------
-//--------------------------------------------------
-//-----offsetMinus button press
-//--------------------------------------------------
 function updateOffsetTimeMinusjson(){
   const fs = require('fs')
   function jsonReader(filePath, cb) {
@@ -303,10 +288,6 @@ function updateOffsetTimeMinusjson(){
   })
 
 };
-//--------------------------------------------------
-//--------------------------------------------------
-//-----offsetReset button press
-//--------------------------------------------------
 function updateOffsetTimeResetjson(){
   const fs = require('fs')
   function jsonReader(filePath, cb) {
@@ -338,8 +319,6 @@ function updateOffsetTimeResetjson(){
   })
 
 };
-//--------------------------------------------------
-//loadDefaultjson();
 function loadDefaultjson(){
   getscheduledTimes();
   const fs = require('fs')
@@ -347,8 +326,6 @@ function loadDefaultjson(){
       if (err) throw err;
   });
 };
-//--------------------------------------------------
-//loadDefaultjson();
 function writeDefaultjson(){
   //console.log("startTitleArray: "+startTitleArray);
   const fs = require('fs')
@@ -378,12 +355,6 @@ function writeDefaultjson(){
     })
   })
   };
-//--------------------------------------------------
-
-
-//--------------------------------------------------
-//-----getOffsetTimejson button press
-//--------------------------------------------------
 function getOffsetTimejson(){
   var a
   const fs = require('fs')
@@ -416,12 +387,6 @@ function getOffsetTimejson(){
   return
  };
 getOffsetTimejson();
-//--------------------------------------------------
-
-
-//--------------------------------------------------
-//-----addNewRowDefault button press
-//--------------------------------------------------
 function addNewRowDefault(){
   console.log("addNewRowDefault knappen funkar");
   var addString = "";
@@ -447,18 +412,6 @@ function addNewRowDefault(){
     });
 };
 //-------------------------------------------------------------------------
-
-
-
-
-/* @description: This file contains server side socket.io code.
- * Using socketio with nodejs
-
- * Emit and receive events.
-
-* @author: http://programmerblog.net
-
-*/
 var socket_io = require('socket.io');
 var io       = socket_io();
 var socketio = {};
@@ -473,7 +426,6 @@ var users = [];
     socket.on("start", function(data){
       io.emit("updatingDB");
     });
-
     socket.on("sendDB_To_Socket", function (data) {
       //console.log("sendDB_To_Socket:"+ JSON.stringify(data) )
       io.emit("sendDB_TO_Main", {socketDBArray:data});
@@ -562,11 +514,6 @@ var users = [];
       console.log("send_addNewRow_To_Socket:");
       addNewRowDefault();
     })
-
-    io.emit("sendIpArrayToAdminPage",{
-      myIpArray: myIpArray
-    })
-//--------------------------------------------------
     socket.on("sendChosenIp_To_Socket",function(data){
       console.log("sendChosenIp_To_Socket:-------------------------------- ",data.myChosenIp);
 
@@ -604,20 +551,18 @@ var users = [];
 
 
     })
+    io.emit("sendIpArrayToAdminPage",{
+      myIpArray: myIpArray
+    })
 //--------------------------------------------------
-
-
-
+//--------------------------------------------------
  });
-
 //--------------------------------------------------
-//----Can i delete this?
 //--------------------------------------------------
  function pad(n, z) {
    z = z || 2;
    return ('00' + n).slice(-z);
  }
-//--------------------------------------------------
  function msToTime(s) {
    var ms = s % 1000;
    s = (s - ms) / 1000;
@@ -641,10 +586,6 @@ var users = [];
 
    return hrs + ':' + mins + ':' + secs + '.' + ms;
  }
-//--------------------------------------------------
- //--------------------------------------------------
- //- CurrentTime
- //--------------------------------------------------
  var setTimeoutTime = 150;
  function nowClock() {
    //console.log("hello");
@@ -668,10 +609,6 @@ var users = [];
    return s;
  }
  nowClock();
- //--------------------------------------------------
- //--------------------------------------------------
- //- startTime
- //--------------------------------------------------
  function startTime() {
    //OLD--------------------------------------------------
    var d = new Date();
@@ -804,7 +741,6 @@ function newStartTime(time){
 
   return ddInMs
 };
-
 
 function newCountDown(){
   var time = "";
